@@ -16,6 +16,8 @@ import string
 from typing import List
 from wordcloud import WordCloud 
 
+SEED = 42
+
 ######################################################
 
 def load_dkhate(test_size:float) -> pd.Series:
@@ -35,7 +37,7 @@ def load_dkhate(test_size:float) -> pd.Series:
     all_hate = pd.concat([train_hate, test_hate])
     all_hate.rename(columns={'subtask_a': 'label'}, inplace=True) # rename last column (subtask_a --> label)
     all_hate.replace({"NOT":0, "OFF":1}, inplace=True) # make labels numeric
-    X_train, X_test, y_train, y_test = train_test_split(all_hate['tweet'], all_hate['label'], test_size=test_size, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(all_hate['tweet'], all_hate['label'], test_size=test_size, random_state=SEED)
     
     return X_train, X_test, y_train, y_test
 
@@ -81,7 +83,7 @@ def create_wordcloud(X_train:pd.Series, y_train:pd.Series, mask:int):
     words = ' '.join([x for x in X_train[y_train == mask]])
     
     # generate cloud
-    cloud = WordCloud(width=800, height=400, background_color='white', random_state=42).generate(words)
+    cloud = WordCloud(width=800, height=400, background_color='white', random_state=SEED).generate(words)
 
     return cloud
 
