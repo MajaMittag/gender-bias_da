@@ -57,9 +57,9 @@ def oversample_data(X_train:pd.Series, y_train:pd.Series, strategy:float, smote:
     """
     
     if smote:
-        oversample = SMOTE(sampling_strategy=strategy)
+        oversample = SMOTE(sampling_strategy=strategy, random_state=SEED)
     else:
-        oversample = RandomOverSampler(sampling_strategy=strategy)
+        oversample = RandomOverSampler(sampling_strategy=strategy, random_state=SEED)
     
     X_train_oversampled, y_train_oversampled = oversample.fit_resample(X_train, y_train)
     
