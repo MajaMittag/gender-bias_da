@@ -53,7 +53,7 @@ def compute_confusion_rates(y_actual:np.ndarray, y_pred:np.ndarray) -> Dict[str,
         "fnr": fnr
     }
 
-def compute_per_term_metric(grouping_cond:str, metric_name:str, data:pd.DataFrame, n_models:int=10, overall:bool=True) -> Dict[str, Dict[str, float]]:
+def compute_per_term_metric(grouping_cond:str, metric_name:str, data:pd.DataFrame, n_models:int=10, overall:bool=True, baseline:bool=False) -> Dict[str, Dict[str, float]]:
     """Compute termwise scores of a specific metric for each of the n model variants. If overall=True, then the overall confusion rates for each model are also computed and returned. 
 
     Args:
@@ -62,6 +62,7 @@ def compute_per_term_metric(grouping_cond:str, metric_name:str, data:pd.DataFram
         data (pd.DataFrame): a pandas dataframe predictions made by each model.
         n_models (int, optional): the number of model variants. Defaults to 10.
         overall (bool, optional): whether to include overall scores or not. Defaults to True.
+        baseline (bool, optional): is the model a single baseline or not? Defaults to False.
 
     Returns:
         Dict[str, Dict[str, float]]: a nested dictionary of the format: {model_number: {term: score}}
@@ -74,17 +75,25 @@ def compute_per_term_metric(grouping_cond:str, metric_name:str, data:pd.DataFram
     if overall:
         overall_scores = dict()
     
-    for i in range(1,n_models+1): # for each model variant
-        
-        # compute overall score for this model variant
-        if overall: 
-            overall_scores[str(i)] = compute_confusion_rates(data["toxic"], data["pred"+str(i)])[metric_name]
-            
-        # compute scpres for each term for this model variant
+    if baseline:
+        overall_scores["baseline"] = compute_confusion_rates(data["toxic"], data["pred_baseline"])[metric_name]
         t_scores = dict()
         for (t_name, t_df) in term_groups: # for each term (t = term)
-            t_scores[t_name] = compute_confusion_rates(t_df["toxic"], t_df["pred"+str(i)])[metric_name]
-        per_term_scores[str(i)] = t_scores
+            t_scores[t_name] = compute_confusion_rates(t_df["toxic"], t_df["pred_baseline"])[metric_name]
+        per_term_scores["baseline"] = t_scores
+    
+    else:
+        for i in range(1,n_models+1): # for each model variant
+            
+            # compute overall score for this model variant
+            if overall: 
+                overall_scores[str(i)] = compute_confusion_rates(data["toxic"], data["pred"+str(i)])[metric_name]
+                
+            # compute scpres for each term for this model variant
+            t_scores = dict()
+            for (t_name, t_df) in term_groups: # for each term (t = term)
+                t_scores[t_name] = compute_confusion_rates(t_df["toxic"], t_df["pred"+str(i)])[metric_name]
+            per_term_scores[str(i)] = t_scores
     
     if overall:
         return per_term_scores, overall_scores
