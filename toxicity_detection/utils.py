@@ -43,14 +43,15 @@ def load_dkhate(test_size:float) -> pd.Series:
 
 ######################################################
 
-def oversample_data(X_train:pd.Series, y_train:pd.Series, strategy:float, smote:bool) -> pd.Series:
+def oversample_data(X_train:pd.Series, y_train:pd.Series, strategy:float, smote:bool, SEED:int=42) -> pd.Series:
     """Oversamples the minority class using the provided sampling strategy.
 
     Args:
-        X_train (pd.Series): original training data
-        y_train (pd.Series): original training labels
+        X_train (pd.Series): original training data.
+        y_train (pd.Series): original training labels.
         strategy (float): sampling strategy. E.g. if it's 0.5, then you'll end up with a 1:2 distribution, whereas 1.0 results in a 1:1 distribution and so on.
         smote (bool): whether to use SMOTE or random sampling.
+        SEED (int): seed for random_state. Defaults to 42.
 
     Returns:
         2 x pd.Series: returns oversampled versions of X_train, X_test, y_train, y_test

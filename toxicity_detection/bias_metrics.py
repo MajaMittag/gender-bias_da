@@ -99,20 +99,31 @@ def compute_per_term_metric(grouping_cond:str, metric_name:str, data:pd.DataFram
         return per_term_scores, overall_scores
     return per_term_scores
 
-def plot_per_term_metrics(per_term_dict:Dict[str, Dict[str, float]], n_models:int=10, FIGSIZE:Tuple[int]=(4,22)):
+def plot_per_term_metrics(per_term_dict:Dict[str, Dict[str, float]], order:List[str]=None, title:str=None, save_name:str=None, grid:bool=False, n_models:int=10, FIGSIZE:Tuple[int]=(12,3)):
     """Plot scatterplot of per term metric scores.
 
     Args:
-        per_term_dict (Dict[str, Dict[str, float]]): a nested dictionary containing the metric scores in the format: {model_number: {term: score}}
+        per_term_dict (Dict[str, Dict[str, float]]): a nested dictionary containing the metric scores in the format: {model_number: {term: score}}.
+        order (List[str], optional): a list of strings specifying the order of the terms on the x-axis. If none, they're sorted by their means (descending). Defaults to None.
+        title (str, optional): the title of the plot. Defaults to None.
+        save_name (str): the name to save the plot as. If None, the plot will not be saved. Defaults to None.
+        grid (bool, optional): whether to add grid or not. Defaults to False.
         n_models (int, optional): the number of model variants. Defaults to 10.
-        FIGSIZE (Tuple[int], optional): the figure size. Defaults to (4,22).
+        FIGSIZE (Tuple[int], optional): the figure size. Defaults to (12,3).
     """
     plt.figure(figsize=FIGSIZE)
-    for i in range(1, n_models+1):
-        y = per_term_dict[str(i)].keys()
-        x = per_term_dict[str(i)].values()
-        plt.scatter(x, y, label=i)
-    plt.legend()
+    if order is None:
+        order = list(pd.DataFrame(per_term_dict).mean(axis=1).sort_values(ascending=False).index)
+    plot_df = pd.DataFrame(per_term_dict).T[order]
+    for colname in plot_df:
+        plt.scatter(x=[colname]*n_models, y=plot_df[colname], zorder=2, s=18)
+    plt.yticks(np.arange(0, 1.1, .1))
+    plt.xticks(rotation=90, ha="center")
+    if grid:
+        plt.grid(zorder=1)
+    plt.title(title)
+    if save_name is not None:
+        plt.savefig("plots\\"+save_name, bbox_inches="tight")
     plt.show()
 
 def compute_fped(overall_fpr:float, per_term_fprs:Dict[str, float]) -> float:
@@ -208,7 +219,7 @@ def power_mean(series:pd.Series, p:float) -> float:
     power_mean = np.power(total / len(series), 1 / p)
     return power_mean
 
-def get_weighted_bias_score(bias_df:pd.DataFrame, overall_auc:float, POWER:float=-5, OVERALL_MODEL_WEIGHT:float=0.25, SUBMETRIC_WEIGHTS:List[float]=[0.25,0.25,0.25], SUBMETRIC_NAMES:List[str]=["subAUC_avg", "BPSN_avg", "BNSP_avg"]) -> float:
+def get_weighted_bias_score(bias_df:pd.DataFrame, overall_auc:float, POWER:float=-5, OVERALL_MODEL_WEIGHT:float=0.25, SUBMETRIC_WEIGHTS:List[float]=[0.25,0.25,0.25], SUBMETRIC_NAMES:List[str]=["SubAUC", "BPSN", "BNSP"]) -> float:
     """Calculate the weighted bias score by combining the overall AUC and the generalized mean of the bias submetrics. See description at https://www.kaggle.com/c/jigsaw-unintended-bias-in-toxicity-classification/overview/evaluation 
     Adapted from: https://www.kaggle.com/code/dborkan/benchmark-kernel/notebook#Create-a-text-tokenizer 
 
