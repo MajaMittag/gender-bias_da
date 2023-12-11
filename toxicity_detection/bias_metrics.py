@@ -185,7 +185,9 @@ def compute_posAEG(subgroup_pos:pd.DataFrame, bgr_pos:pd.DataFrame, col_name:str
     Returns:
         float: the positive AEG score [-0.5, 0.5].
     """
-    norm_mwu = normalized_mwu(subgroup_pos, bgr_pos, col_name) 
+    norm_mwu = normalized_mwu(bgr_pos, subgroup_pos, col_name) 
+    if norm_mwu is None:
+        return None
     pos_aeg = 0.5 - norm_mwu
     return pos_aeg
     
@@ -200,7 +202,9 @@ def compute_negAEG(subgroup_neg:pd.DataFrame, bgr_neg:pd.DataFrame, col_name:str
     Returns:
         float: the negative AEG score [-0.5, 0.5].
     """
-    norm_mwu = normalized_mwu(subgroup_neg, bgr_neg, col_name) 
+    norm_mwu = normalized_mwu(bgr_neg, subgroup_neg, col_name) 
+    if norm_mwu is None:
+        return None
     neg_aeg = 0.5 - norm_mwu
     return neg_aeg
 
