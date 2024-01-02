@@ -8,6 +8,7 @@ from danlp.datasets import DKHate
 from imblearn.over_sampling import RandomOverSampler, SMOTE
 from keras.utils import pad_sequences
 import matplotlib.pyplot as plt
+import nltk
 import numpy as np
 import pandas as pd
 import re
@@ -179,18 +180,25 @@ def preprocess(text:str, stopwords:list, to_string:bool=True):
         str or list: string or list of preprocessed text
     """
     # tokenize text using dacy
-    doc = nlp(text)
     tokens = []
     re_punctuation = re.compile('[%s]' % re.escape(string.punctuation))
+    #re_word_pos = re.compile(r"\b(.*?)_([A-Z]+)\b")
+        
+    for token in nltk.word_tokenize(text):
 
-    for token in doc:
-        word, tag = str(token).split("_") # split into word and POS tag
-        word = word.lower() # lowercase
+        #matches = re_word_pos.findall(token)
+        #if matches:
+        #    word, tag = matches[0][0], matches[0][1]
+        #else:
+        #    word, tag = token, "X"
+
+        word = token.lower() # lowercase
         word = re_punctuation.sub('', word) # remove punctuation
         word = re.sub(r"[\d]", "", word) # remove digits
-        if word not in stopwords: # remove stopwords
-            tokens.append(word+"_"+tag)
-
+        if word not in stopwords and len(word) > 0: # remove stopwords while avoiding empty strings
+# avoids things like "_PUNCT" after the punctuation has been removed
+            tokens.append(word)
+    
     if to_string:
         tokens = " ".join(tokens)
         tokens = re.sub("\s\s+" , " ", tokens) # handle multiple spaces
