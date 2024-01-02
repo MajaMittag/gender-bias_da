@@ -3,6 +3,7 @@
 ######################################################
 
 # Imports 
+import dacy
 from danlp.datasets import DKHate
 from imblearn.over_sampling import RandomOverSampler, SMOTE
 from keras.utils import pad_sequences
@@ -17,6 +18,25 @@ from typing import List
 from wordcloud import WordCloud 
 
 SEED = 42
+
+# Load dacy's model
+nlp = dacy.load("da_dacy_medium_trf-0.2.0") # takes around 4 minutes the first time
+
+######################################################
+
+def add_pos_tags(text:str) -> str:
+    """Add POS-tags to text (format: "my_DET example_NOUN").
+
+    Args:
+        text (str): text without POS-tags
+
+    Returns:
+        str: text with POS-tags
+    """
+    tokens_with_pos = []
+    for token in nlp(text):
+        tokens_with_pos.append(f"{token}_{token.pos_}")
+    return " ".join(tokens_with_pos)
 
 ######################################################
 
@@ -110,6 +130,43 @@ def plot_wordcloud(word_cloud, title:str, save:bool, file_name:str) -> None:
 
 ######################################################
 
+# def preprocess(text:str, stopwords:list, to_string:bool=True):
+#     """Preprocesses data by lowercasing, removing punctuation and removing stop words. Can be returned as string (to_string=True) or list of tokens.
+
+#     Args:
+#         text (str): the text to be preprocessed
+#         stopwords (list): list of stop words
+#         to_string (bool, optional): whether to return preprocessed text as string. Defaults to True.
+
+#     Returns:
+#         str or list: string or list of preprocessed text
+#     """
+#     # lowercase text
+#     lowercase_text = text.lower()
+    
+#     # remove punctuation
+#     re_punctuation = re.compile('[%s]' % re.escape(string.punctuation))
+#     wo_punctuation = re_punctuation.sub('', lowercase_text)
+    
+#     # remove digits
+#     clean_text = re.sub(r"[\d]", "", wo_punctuation)
+    
+#     # # sub multiple occurrences of "user" in a row for only the first occurence
+#     # clean_text = re.sub(r"\buser\b(?:\s*user\s*){1,}", "user ", clean_text)
+#     # (performs the same with this enabled)
+    
+#     # # split concatenated words that contain url by url
+#     # clean_text = ' '.join(re.split(r"(url)", clean_text))
+#     # (performs slightly worse with this enabled)
+    
+#     # tokenize and remove stop words
+#     tokens = [token for token in clean_text.split() if token not in stopwords]
+    
+#     if to_string:
+#         tokens = ' '.join(tokens)
+    
+#     return tokens
+
 def preprocess(text:str, stopwords:list, to_string:bool=True):
     """Preprocesses data by lowercasing, removing punctuation and removing stop words. Can be returned as string (to_string=True) or list of tokens.
 
@@ -121,29 +178,22 @@ def preprocess(text:str, stopwords:list, to_string:bool=True):
     Returns:
         str or list: string or list of preprocessed text
     """
-    # lowercase text
-    lowercase_text = text.lower()
-    
-    # remove punctuation
+    # tokenize text using dacy
+    doc = nlp(text)
+    tokens = []
     re_punctuation = re.compile('[%s]' % re.escape(string.punctuation))
-    wo_punctuation = re_punctuation.sub('', lowercase_text)
-    
-    # remove digits
-    clean_text = re.sub(r"[\d]", "", wo_punctuation)
-    
-    # # sub multiple occurrences of "user" in a row for only the first occurence
-    # clean_text = re.sub(r"\buser\b(?:\s*user\s*){1,}", "user ", clean_text)
-    # (performs the same with this enabled)
-    
-    # # split concatenated words that contain url by url
-    # clean_text = ' '.join(re.split(r"(url)", clean_text))
-    # (performs slightly worse with this enabled)
-    
-    # tokenize and remove stop words
-    tokens = [token for token in clean_text.split() if token not in stopwords]
-    
+
+    for token in doc:
+        word, tag = str(token).split("_") # split into word and POS tag
+        word = word.lower() # lowercase
+        word = re_punctuation.sub('', word) # remove punctuation
+        word = re.sub(r"[\d]", "", word) # remove digits
+        if word not in stopwords: # remove stopwords
+            tokens.append(word+"_"+tag)
+
     if to_string:
-        tokens = ' '.join(tokens)
+        tokens = " ".join(tokens)
+        tokens = re.sub("\s\s+" , " ", tokens) # handle multiple spaces
     
     return tokens
 
