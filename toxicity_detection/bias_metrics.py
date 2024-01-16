@@ -117,7 +117,7 @@ def plot_per_term_metrics(per_term_dict:Dict[str, Dict[str, float]], order:List[
         order = list(pd.DataFrame(per_term_dict).mean(axis=1).sort_values(ascending=False).index)
     plot_df = pd.DataFrame(per_term_dict).T[order]
     for colname in plot_df:
-        plt.scatter(x=[colname]*n_models, y=plot_df[colname], zorder=2, s=12)
+        plt.scatter(x=[colname]*n_models, y=plot_df[colname], zorder=2, s=18)
     plt.yticks(np.arange(0, 1.1, .1))
     plt.xticks(rotation=90, ha="center")
     if grid:
