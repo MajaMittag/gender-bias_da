@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import mannwhitneyu
 from typing import Dict, List, Tuple
+import os
 
 def compute_confusion_counts(y_actual:np.ndarray, y_pred:np.ndarray) -> Dict[str, int]:
     """Computes confusion counts, i.e. true positive, true negative, false positive, and false negative.
@@ -124,7 +125,7 @@ def plot_per_term_metrics(per_term_dict:Dict[str, Dict[str, float]], order:List[
         plt.grid(zorder=1)
     plt.title(title)
     if save_name is not None:
-        plt.savefig("plots\\"+save_name, bbox_inches="tight")
+        plt.savefig(os.getcwd()+"\\plots\\"+save_name, bbox_inches="tight")
     plt.show()
 
 def compute_fped(overall_fpr:float, per_term_fprs:Dict[str, float]) -> float:
