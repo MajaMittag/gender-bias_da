@@ -1,12 +1,15 @@
+# Unintended bias in toxicity detection
+
 **A brief description of each file and folder follows:**
 
-* archive: archive of old files. They might need minor revisions before running.
+* archive: Archive of old files. They might need minor revisions before running.
+* create_IPTTS: Materials and code for generating the synthetic test set. Run the notebook to generate it. 
 * data: 
     * overall AUCs for each model.
     * dataset splits (the original, CDS, data supplemented, and randomly supplemented dataset).
     * identity terms XX.
     * the synthetic dataset and a pickled version with the model predictions.
-* embeddings: the word2vec embeddings.
+* embeddings: The word2vec embeddings.
 * mitigation: XX.
 * models: XX.
 * plots: XX.
