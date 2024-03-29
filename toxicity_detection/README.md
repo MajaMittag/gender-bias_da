@@ -1,10 +1,18 @@
-This folder contains 3 py-files.
+**A brief description of each file and folder follows:**
 
-utils.py:
-Utility functions used in main files.
+* archive: archive of old files. They might need minor revisions before running.
+* data: 
+    * overall AUCs for each model.
+    * dataset splits (the original, CDS, data supplemented, and randomly supplemented dataset).
+    * identity terms XX.
+    * the synthetic dataset and a pickled version with the model predictions.
+* embeddings: the word2vec embeddings.
+* mitigation: XX.
+* models: XX.
+* plots: XX.
 
-main_quick_version.py:
-The quick and dirty version of the main file. Can only be run, if the necessary files are in the same directory. These include the preprocessed data splits and the saved models among other. 
-
-main_full_version.py:
-If the necessary files are not in the same directory, this version can be run to generate them. It also includes some exploratory data analysis. 
+* bias_metrics.py: Implementation of the bias metrics used in the main files.
+* hen_occurrences.ipynb: Identify occurrences of the word "hen" in the original dataset.
+* toxicity_detection.ipynb: XX.
+* unintended_bias_analysis.ipynb: XX.
+* utils.py: Utility functions used in the main files.
