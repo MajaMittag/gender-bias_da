@@ -10,7 +10,7 @@
     * the synthetic dataset and a pickled version with the model predictions.
 * **embeddings**: The word2vec embeddings.
 * **mitigation**: XX.
-* **models**: XX.
+* **models**: Various model initializations.
 * **plots**: Various plots created for the thesis.
 * **bias_metrics.py**: Implementation of the bias metrics used in the main files.
 * **hen_occurrences.ipynb**: Identify occurrences of the word "hen" in the original dataset.

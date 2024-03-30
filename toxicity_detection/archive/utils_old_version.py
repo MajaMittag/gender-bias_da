@@ -131,6 +131,43 @@ def plot_wordcloud(word_cloud, title:str, save:bool, file_name:str) -> None:
 
 ######################################################
 
+# def preprocess(text:str, stopwords:list, to_string:bool=True):
+#     """Preprocesses data by lowercasing, removing punctuation and removing stop words. Can be returned as string (to_string=True) or list of tokens.
+
+#     Args:
+#         text (str): the text to be preprocessed
+#         stopwords (list): list of stop words
+#         to_string (bool, optional): whether to return preprocessed text as string. Defaults to True.
+
+#     Returns:
+#         str or list: string or list of preprocessed text
+#     """
+#     # lowercase text
+#     lowercase_text = text.lower()
+    
+#     # remove punctuation
+#     re_punctuation = re.compile('[%s]' % re.escape(string.punctuation))
+#     wo_punctuation = re_punctuation.sub('', lowercase_text)
+    
+#     # remove digits
+#     clean_text = re.sub(r"[\d]", "", wo_punctuation)
+    
+#     # # sub multiple occurrences of "user" in a row for only the first occurence
+#     # clean_text = re.sub(r"\buser\b(?:\s*user\s*){1,}", "user ", clean_text)
+#     # (performs the same with this enabled)
+    
+#     # # split concatenated words that contain url by url
+#     # clean_text = ' '.join(re.split(r"(url)", clean_text))
+#     # (performs slightly worse with this enabled)
+    
+#     # tokenize and remove stop words
+#     tokens = [token for token in clean_text.split() if token not in stopwords]
+    
+#     if to_string:
+#         tokens = ' '.join(tokens)
+    
+#     return tokens
+
 def preprocess(text:str, stopwords:list, to_string:bool=True):
     """Preprocesses data by lowercasing, removing punctuation and removing stop words. Can be returned as string (to_string=True) or list of tokens.
 
@@ -148,6 +185,13 @@ def preprocess(text:str, stopwords:list, to_string:bool=True):
     #re_word_pos = re.compile(r"\b(.*?)_([A-Z]+)\b")
         
     for token in nltk.word_tokenize(text):
+
+        #matches = re_word_pos.findall(token)
+        #if matches:
+        #    word, tag = matches[0][0], matches[0][1]
+        #else:
+        #    word, tag = token, "X"
+
         word = token.lower() # lowercase
         word = re_punctuation.sub('', word) # remove punctuation
         word = re.sub(r"[\d]", "", word) # remove digits
