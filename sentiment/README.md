@@ -1,7 +1,6 @@
-# Gender bias in sentiment analysis
+# Gender Bias in Sentiment Analysis
 
-**A brief description of each file and folder follows:**
-
+## Contents:
 * plots: Various plots created for the thesis. 
 * bias_in_lexicons.ipynb: XX.
 * bias_in_sentiment_models.ipynb: XX.

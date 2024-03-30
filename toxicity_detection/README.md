@@ -1,7 +1,6 @@
 # Unintended bias in toxicity detection
 
-**A brief description of each file and folder follows:**
-
+## Contents
 * archive: Archive of old files. They might need minor revisions before running.
 * create_IPTTS: Materials and code for generating the synthetic test set. Run the notebook to generate it. 
 * data: 
