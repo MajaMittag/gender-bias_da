@@ -6,7 +6,6 @@
 * **data**: 
     * overall AUCs for each model.
     * dataset splits (the original, CDS, data supplemented, and randomly supplemented dataset).
-    * identity terms XX.
     * the synthetic dataset and a pickled version with the model predictions.
 * **embeddings**: The word2vec embeddings.
 * **mitigation**: Two data augmentation mitigation approaches: counterfactual data substitution and data supplementation.
