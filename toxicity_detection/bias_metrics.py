@@ -1,3 +1,7 @@
+######################################################
+# Bias metrics                                       #
+######################################################
+
 # Unintended bias evaluation metrics as described in Dixon et al. 2018 (https://doi.org/10.1145/3278721.3278729) and Borkan et al. 2019 (https://doi.org/10.1145/3308560.3317593). Some of the implementations are inspired by the code at https://github.com/conversationai/unintended-ml-bias-analysis/blob/main/archive/unintended_ml_bias/model_bias_analysis.py
 
 import pandas as pd

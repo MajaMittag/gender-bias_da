@@ -1,3 +1,7 @@
+######################################################
+# Web scraper                                        #
+######################################################
+
 # Based on: 
 # 1) https://www.freecodecamp.org/news/scraping-wikipedia-articles-with-python/
 # 2) https://www.geeksforgeeks.org/web-scraping-from-wikipedia-using-python-a-complete-guide/
